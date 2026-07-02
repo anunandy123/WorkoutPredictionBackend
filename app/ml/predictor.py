@@ -1,32 +1,34 @@
-"""
-Predictor module for making predictions.
-Placeholder for production predictions using ML models.
-"""
+from app.ml.fitness_predictor import (
+    predict_all,
+    predict_calories,
+    predict_diet,
+    predict_exercise,
+    predict_meal,
+    predict_workout,
+)
 
 
 class Predictor:
     @staticmethod
-    def predict_workout(features: dict) -> dict:
-        """Predict workout recommendations."""
-        # TODO: Implement ML prediction in production
-        return {
-            "prediction": "Moderate intensity workout",
-            "confidence": 0.85,
-            "details": "Based on current fitness level",
-        }
+    def predict_fitness(payload: dict) -> dict:
+        return predict_all(payload)
 
     @staticmethod
-    def predict_calorie_needs(features: dict) -> dict:
-        """Predict calorie needs."""
-        # TODO: Implement ML prediction in production
-        return {
-            "daily_calorie_goal": 2000,
-            "confidence": 0.8,
-            "details": "Based on user profile",
-        }
+    def predict_calories(payload: dict) -> dict:
+        return predict_calories(payload)
 
     @staticmethod
-    def predict_progress(features: dict) -> dict:
-        """Predict user progress."""
-        # TODO: Implement ML prediction in production
-        return {"predicted_weight": 75.0, "confidence": 0.75, "timeline_days": 30}
+    def predict_workout(payload: dict) -> dict:
+        return predict_workout(payload)
+
+    @staticmethod
+    def predict_diet(payload: dict) -> dict:
+        return predict_diet(payload)
+
+    @staticmethod
+    def predict_exercise(payload: dict) -> dict:
+        return predict_exercise(payload)
+
+    @staticmethod
+    def predict_meal(payload: dict) -> dict:
+        return predict_meal(payload)

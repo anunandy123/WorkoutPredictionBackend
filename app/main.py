@@ -8,6 +8,7 @@ from app.routes import (
     food_routes,
     goal_routes,
     lifestyle_routes,
+    prediction_routes,
     progress_routes,
     user_routes,
     workout_routes,
@@ -41,6 +42,7 @@ app.include_router(equipment_routes.router)
 app.include_router(food_routes.router)
 app.include_router(lifestyle_routes.router)
 app.include_router(progress_routes.router)
+app.include_router(prediction_routes.router)
 
 
 @app.get("/")
