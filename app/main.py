@@ -2,16 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.database import Base, engine
-from app.routes import (
-    equipment_routes,
-    exercise_routes,
+from app.routes import (  # equipment_routes,; exercise_routes,; goal_routes,; workout_routes,
     food_routes,
-    goal_routes,
     lifestyle_routes,
     prediction_routes,
     progress_routes,
     user_routes,
-    workout_routes,
 )
 
 # Create database tables
@@ -35,10 +31,10 @@ app.add_middleware(
 
 # Include routers
 app.include_router(user_routes.router)
-app.include_router(goal_routes.router)
-app.include_router(workout_routes.router)
-app.include_router(exercise_routes.router)
-app.include_router(equipment_routes.router)
+# app.include_router(goal_routes.router)
+# app.include_router(workout_routes.router)
+# app.include_router(exercise_routes.router)
+# app.include_router(equipment_routes.router)
 app.include_router(food_routes.router)
 app.include_router(lifestyle_routes.router)
 app.include_router(progress_routes.router)

@@ -1,20 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
+from app.config.database import get_db
 from app.config.security import get_current_user
+from app.repositories.user_repository import UserRepository
 from app.schemas.prediction_schema import (
-    CaloriePredictionRequest,
-    CaloriePredictionResponse,
-    DietPredictionRequest,
-    DietPredictionResponse,
-    ExercisePredictionRequest,
-    ExercisePredictionResponse,
     FitnessPredictionRequest,
+    FitnessPredictionRequestPre,
     FitnessPredictionResponse,
-    MealPredictionRequest,
-    MealPredictionResponse,
     PredictionOptionsResponse,
-    WorkoutPredictionRequest,
-    WorkoutPredictionResponse,
 )
 from app.services.prediction_service import PredictionService
 
@@ -42,59 +36,37 @@ def get_prediction_options(_user_id: int = Depends(get_current_user)):
     return _handle_prediction(PredictionService.get_prediction_options)
 
 
-@router.post("/calories", response_model=CaloriePredictionResponse)
-def predict_calories(
-    payload: CaloriePredictionRequest,
-    _user_id: int = Depends(get_current_user),
-):
-    """Predict calories burned using linear regression and scaler models."""
-    return _handle_prediction(
-        lambda: PredictionService.predict_calories(payload)
-    )
-
-
-@router.post("/workout", response_model=WorkoutPredictionResponse)
-def predict_workout(
-    payload: WorkoutPredictionRequest,
-    _user_id: int = Depends(get_current_user),
-):
-    """Recommend workout type using the workout random forest model."""
-    return _handle_prediction(lambda: PredictionService.predict_workout(payload))
-
-
-@router.post("/diet", response_model=DietPredictionResponse)
-def predict_diet(
-    payload: DietPredictionRequest,
-    _user_id: int = Depends(get_current_user),
-):
-    """Recommend diet type using the diet random forest model."""
-    return _handle_prediction(lambda: PredictionService.predict_diet(payload))
-
-
-@router.post("/exercise", response_model=ExercisePredictionResponse)
-def predict_exercise(
-    payload: ExercisePredictionRequest,
-    _user_id: int = Depends(get_current_user),
-):
-    """Recommend exercise using the exercise random forest model."""
-    return _handle_prediction(
-        lambda: PredictionService.predict_exercise(payload)
-    )
-
-
-@router.post("/meal", response_model=MealPredictionResponse)
-def predict_meal(
-    payload: MealPredictionRequest,
-    _user_id: int = Depends(get_current_user),
-):
-    """Recommend meal type using the meal decision tree model."""
-    return _handle_prediction(lambda: PredictionService.predict_meal(payload))
-
-
 @router.post("/", response_model=FitnessPredictionResponse)
 def predict_fitness(
-    payload: FitnessPredictionRequest,
-    _user_id: int = Depends(get_current_user),
+    payload: FitnessPredictionRequestPre,
+    user_id: int = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
-    """Run the full prediction pipeline across all ML models."""
-    return _handle_prediction(lambda: PredictionService.predict(payload))
+    """Run the full prediction pipeline across all ML models.
+
+    Automatically includes user's age, weight, and BMI from their profile.
+    """
+    # Get current user's data
+    user = UserRepository.get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    # Calculate BMI: weight (kg) / (height (m) ^ 2)
+    height_m = user.height / 100  # Convert cm to m
+    bmi = user.weight / (height_m**2)
+
+    # Enrich payload with user data
+    enriched_payload = payload.model_dump()
+    enriched_payload.update(
+        {
+            "age": user.age,
+            "weight_kg": user.weight,
+            "gender": user.gender,
+            "bmi": round(bmi, 2),
+        }
+    )
+    enriched_payload = FitnessPredictionRequest(**enriched_payload)
+
+    return _handle_prediction(lambda: PredictionService.predict(enriched_payload))

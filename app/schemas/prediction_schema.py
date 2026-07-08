@@ -27,9 +27,7 @@ def _validate_muscle_group(value: Optional[str]) -> Optional[str]:
         return value
     valid_groups = ModelLoader.get_target_muscle_groups()
     if value not in valid_groups:
-        raise ValueError(
-            f"Invalid target_muscle_group. Valid values: {valid_groups}"
-        )
+        raise ValueError(f"Invalid target_muscle_group. Valid values: {valid_groups}")
     return value
 
 
@@ -117,6 +115,31 @@ class MealPredictionRequest(BaseModel):
 
 class MealPredictionResponse(BaseModel):
     meal_type: str
+
+
+class FitnessPredictionRequestPre(BaseModel):
+    # age: int = Field(..., gt=0, le=120)
+    # gender: Gender
+    # weight_kg: float = Field(..., gt=0)
+    # bmi: float = Field(..., gt=0)
+    avg_bpm: int = Field(..., gt=0)
+    session_duration_hrs: float = Field(..., gt=0)
+    workout_frequency_days_per_week: int = Field(..., ge=0, le=7)
+    experience_level: int = Field(
+        ..., ge=1, le=3, description="1=Beginner, 2=Intermediate, 3=Expert"
+    )
+    fat_percentage: float = Field(..., ge=0)
+    proteins: float = Field(..., ge=0)
+    carbs: float = Field(..., ge=0)
+    fats: float = Field(..., ge=0)
+    target_muscle_group: Optional[str] = "Chest"
+    equipment: Optional[Equipment] = "Body Only"
+    difficulty_level: Optional[DifficultyLevel] = "Intermediate"
+
+    @field_validator("target_muscle_group")
+    @classmethod
+    def validate_target_muscle_group(cls, value: Optional[str]) -> Optional[str]:
+        return _validate_muscle_group(value)
 
 
 class FitnessPredictionRequest(BaseModel):
