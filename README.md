@@ -72,8 +72,8 @@ The prediction model was trained in `calories prediction model.ipynb` on `Final_
 
 ## Team
 
-- Baisakhi Nandi — [role, e.g. model training]
-- Syed Md. Farhan E Azam — [role, e.g. API development]
-- Soumik Mondal — [role, e.g. data cleaning]
-- Anuska Nandy — [role, e.g. deployment/testing]
+- Baisakhi Nandi — [ model training]
+- Syed Md. Farhan E Azam — [ API development]
+- Soumik Mondal — [data cleaning]
+- Anuska Nandy — [deployment/testing]
 
