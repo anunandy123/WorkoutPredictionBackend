@@ -65,7 +65,6 @@ Example request:
 }
 ```
 
-*(Replace this with the actual request/response shape once confirmed.)*
 
 ## Model
 
