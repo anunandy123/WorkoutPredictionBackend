@@ -7,12 +7,16 @@ A backend service that predicts calories burned during a workout using a machine
 The service takes in workout and user details (things like age, weight, duration, heart rate) and returns a predicted calorie burn, based on a model trained on gym member exercise data.
 
 ## Project structure
+
+```
 ├── app/                                   # Backend application code
 ├── calories prediction model.ipynb        # Notebook used to train/explore the model
 ├── Calorie model.joblib                   # Saved trained model
 ├── Final_data.csv                         # Cleaned dataset used for training
 ├── gym_members_exercise_tracking.csv      # Raw source dataset
 └── requirements.txt                       # Python dependencies
+
+```
 
 ## Tech stack
 
