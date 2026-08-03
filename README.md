@@ -1,6 +1,6 @@
 # A Personalised Workout Prediction System
 
-A backend service that predicts calories burned during a workout using a machine learning model trained on gym exercise data. Built as a group project by [Name 1], [Name 2], [Name 3], and [Name 4].
+A backend service that predicts calories burned during a workout using a machine learning model trained on gym exercise data. Built as a group project by Baisakhi Nandi, Syed Md. Farhan E Azam , Soumik Mondal and  Anuska Nandy.
 
 ## What it does
 
